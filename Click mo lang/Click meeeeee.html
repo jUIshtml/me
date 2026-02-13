@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Floating hearts background */
+        .hearts-bg {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            animation: floatUp 8s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main question screen */
+        .screen {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .question-box {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .question-box {
+                padding: 40px 25px;
+            }
+        }
+
+        .big-emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5em;
+            color: #e94560;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 80px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 50px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .btn {
+                padding: 18px 35px;
+                font-size: 1.1em;
+            }
+        }
+
+        .yes-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .no-btn {
+            background: #ff6b6b;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Virus screen */
+        .virus-screen {
+            background: linear-gradient(135deg, #ff0000 0%, #000000 100%);
+            color: #00ff00;
+            flex-direction: column;
+            font-family: 'Courier New', monospace;
+        }
+
+        .virus-title {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            padding: 0 20px;
+            color: #ff0000;
+        }
+
+        @media (max-width: 768px) {
+            .virus-title {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .virus-title {
+                font-size: 1.5em;
+            }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
+        .progress-bar {
+            width: 80%;
+            max-width: 500px;
+            height: 30px;
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ff0000;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .virus-msg {
+            font-size: 1.3em;
+            margin-top: 20px;
+            text-align: center;
+            padding: 0 20px;
+            color: #00ff00;
+        }
+
+        .chinese-text {
+            position: fixed;
+            font-size: 18px;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            animation: fallDown 3s linear;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        @keyframes fallDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0.3;
+            }
+        }
+
+        /* Browser Alert Style Popup */
+        .browser-alert {
+            position: fixed;
+            background: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border-radius: 8px;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 10000;
+            animation: alertPop 0.3s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .browser-alert {
+                min-width: 250px;
+                max-width: 90%;
+            }
+        }
+
+        @keyframes alertPop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .alert-header {
+            background: linear-gradient(180deg, #f0f0f0 0%, #d9d9d9 100%);
+            padding: 8px 12px;
+            border-bottom: 1px solid #ccc;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-icon {
+            font-size: 16px;
+        }
+
+        .alert-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .alert-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .alert-message {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+        }
+
+        .alert-button {
+            padding: 6px 24px;
+            background: #e1e1e1;
+            border: 1px solid #adadad;
+            border-radius: 3px;
+            font-size: 13px;
+            cursor: pointer;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .alert-button:hover {
+            background: #d0d0d0;
+        }
+
+        .alert-button:active {
+            background: #c0c0c0;
+        }
+
+        /* System Notification Style */
+        .system-notification {
+            position: fixed;
+            background: #2d2d2d;
+            color: white;
+            border-radius: 8px;
+            padding: 15px;
+            min-width: 300px;
+            max-width: 350px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 10001;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .system-notification {
+                min-width: 250px;
+                max-width: 90%;
+                padding: 12px;
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .notification-icon {
+            font-size: 24px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        /* Envelope screen */
+        .envelope-screen {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            flex-direction: column;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .envelope-wrapper {
+                width: 280px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .envelope-wrapper {
+                width: 240px;
+                height: 160px;
+            }
+        }
+
+        .envelope-wrapper:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #e94560;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #ff6b6b;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        @media (max-width: 768px) {
+            .envelope-flap {
+                border-left: 140px solid transparent;
+                border-right: 140px solid transparent;
+                border-top: 93px solid #ff6b6b;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .envelope-flap {
+                border-left: 120px solid transparent;
+                border-right: 120px solid transparent;
+                border-top: 80px solid #ff6b6b;
+            }
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .envelope-bottom {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid #c73e54;
+            border-right: 150px solid #c73e54;
+            border-bottom: 100px solid #b8354a;
+        }
+
+        @media (max-width: 768px) {
+            .envelope-bottom {
+                border-left: 140px solid #c73e54;
+                border-right: 140px solid #c73e54;
+                border-bottom: 93px solid #b8354a;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .envelope-bottom {
+                border-left: 120px solid #c73e54;
+                border-right: 120px solid #c73e54;
+                border-bottom: 80px solid #b8354a;
+            }
+        }
+
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            height: 180px;
+            background: white;
+            border-radius: 5px;
+            padding: 20px;
+            transition: all 0.6s ease;
+            z-index: 2;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .envelope.open .letter {
+            transform: translateY(-130px);
+            height: 420px;
+            z-index: 4;
+        }
+
+        .letter-text {
+            opacity: 0;
+            transition: opacity 0.6s ease 0.3s;
+            text-align: center;
+            width: 100%;
+        }
+
+        .envelope.open .letter-text {
+            opacity: 1;
+        }
+
+        .letter h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #e94560;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .letter p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .letter-emoji {
+            font-size: 60px;
+            margin: 20px auto;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+            width: fit-content;
+        }
+
+        .envelope-hint {
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8em;
+            margin-top: 40px;
+            animation: fadeInOut 2s ease-in-out infinite;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Memory cards screen */
+        .cards-screen {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .cards-title {
+            position: absolute;
+            top: 30px;
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .cards-title {
+                font-size: 2em;
+                top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-title {
+                font-size: 1.6em;
+            }
+        }
+
+        .memory-card {
+            position: absolute;
+            width: 150px;
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .memory-card {
+                width: 120px;
+            }
+            
+            .memory-card img {
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .memory-card {
+                width: 100px;
+                padding: 8px;
+            }
+            
+            .memory-card img {
+                height: 80px;
+            }
+        }
+
+        .memory-card:hover {
+            transform: scale(1.15) !important;
+            z-index: 50;
+        }
+
+        .memory-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            background: #f5f5f5;
+        }
+
+        .memory-card-title {
+            font-family: 'Dancing Script', cursive;
+            color: #e94560;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+            50% { transform: translate(10px, -15px) rotate(2deg); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) rotate(2deg); }
+            50% { transform: translate(-10px, -15px) rotate(-2deg); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) rotate(-1deg); }
+            50% { transform: translate(15px, -10px) rotate(1deg); }
+        }
+
+        .card-hint {
+            position: absolute;
+            bottom: 30px;
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5em;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        /* Modal for enlarged cards */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 80vh;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .modal-caption {
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8em;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .close-modal {
+                top: 10px;
+                right: 20px;
+                font-size: 40px;
+            }
+        }
+
+        .close-modal:hover {
+            color: #e94560;
+        }
+
+        /* Blackout screen */
+        .blackout-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .blackout-screen.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts background -->
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <!-- Blackout Screen -->
+    <div class="blackout-screen" id="blackoutScreen"></div>
+
+    <!-- Question Screen -->
+    <div class="screen active" id="questionScreen">
+        <div class="question-box">
+            <div class="big-emoji">💖</div>
+            <h1 id="questionText">Will You Be My Valentine?</h1>
+            <div class="btn-container">
+                <button class="btn yes-btn" id="yesButton">Yes 💕</button>
+                <button class="btn no-btn" id="noButton">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Virus Prank Screen -->
+    <div class="screen virus-screen" id="virusScreen">
+        <div class="virus-title">⚠️ 系统已被感染 ⚠️</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="virusProgress"></div>
+        </div>
+        <div class="virus-msg" id="virusMsg">正在初始化...</div>
+    </div>
+
+    <!-- Envelope Screen -->
+    <div class="screen envelope-screen" id="envelopeScreen">
+        <div class="envelope-wrapper" id="envelopeWrapper">
+            <div class="envelope" id="envelopeBox">
+                <div class="envelope-flap"></div>
+                <div class="envelope-bottom"></div>
+                <div class="letter">
+                    <div class="letter-text">
+                        <h2>My Dearest Love</h2>
+                        <p>I hope u like my proposal hehe.</p>
+                        <p>I love you so much.</p>
+                        <p>I love you forever.</p>
+                        <p>Thank you for being you.</p>
+                        <p>Happy Valentine's Day!</p>
+                        <div class="letter-emoji" id="letterEmoji">💖</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="envelope-hint">Click the envelope, bebe ko!</div>
+    </div>
+
+    <!-- Memory Cards Screen -->
+    <div class="screen cards-screen" id="cardsScreen">
+        <div class="cards-title">Hall of Memories ❤️</div>
+        
+        <div class="memory-card" style="top: 15%; left: 5%; animation: float1 6s ease-in-out infinite;" onclick="showCard(0)">
+            <img src="photos/photo1.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+1'">
+            <div class="memory-card-title">University Grounds</div>
+        </div>
+
+        <div class="memory-card" style="top: 15%; right: 5%; animation: float2 7s ease-in-out infinite;" onclick="showCard(1)">
+            <img src="photos/photo2.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+2'">
+            <div class="memory-card-title">Intramurals</div>
+        </div>
+
+        <div class="memory-card" style="top: 45%; left: 3%; animation: float3 5s ease-in-out infinite;" onclick="showCard(2)">
+            <img src="photos/photo3.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+3'">
+            <div class="memory-card-title">Adelphas</div>
+        </div>
+
+        <div class="memory-card" style="top: 45%; right: 3%; animation: float1 8s ease-in-out infinite;" onclick="showCard(3)">
+            <img src="photos/photo4.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+4'">
+            <div class="memory-card-title">Mcdo</div>
+        </div>
+
+        <div class="memory-card" style="bottom: 15%; left: 10%; animation: float2 6.5s ease-in-out infinite;" onclick="showCard(4)">
+            <img src="photos/photo5.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+5'">
+            <div class="memory-card-title">Graduation day</div>
+        </div>
+
+        <div class="memory-card" style="bottom: 15%; right: 10%; animation: float3 7.5s ease-in-out infinite;" onclick="showCard(5)">
+            <img src="photos/photo6.jpeg" onerror="this.src='https://via.placeholder.com/150/e94560/ffffff?text=Memory+6'">
+            <div class="memory-card-title">Photobooth</div>
+        </div>
+
+        <div class="card-hint">Click on any card to see our moments! 💝</div>
+    </div>
+
+    <!-- Modal for card view -->
+    <div class="modal" id="cardModal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImg" src="">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <script>
+        // Memory card data
+        const memories = [
+            { img: 'photos/photo1.jpeg', text: 'I always love it when you lean on me' },
+            { img: 'photos/photo2.jpeg', text: 'My supportive bebe🌟' },
+            { img: 'photos/photo3.jpeg', text: 'Cotie cotie ng bebe ko mwahhh 🥰' },
+            { img: 'photos/photo4.jpeg', text: 'Twinning yarn?' },
+            { img: 'photos/photo5.jpeg', text: 'Happy graduation day, my love' },
+            { img: 'photos/photo6.jpeg', text: 'Thank you for making this core memory with me (bulabog buong english club)' }
+        ];
+
+        let noClicks = 0;
+        const questions = [
+            "Will You Be My Valentine?",
+            "Sige na oh... 🥺",
+            "PLEASE",
+            "Dae mo ko pag testingon ase",
+            "LAST CHANCE!"
+        ];
+
+        // Chinese characters for Matrix effect
+        const chineseChars = '田由甲申甴电甶男甸甹町画甼甽甾甿畀畁畂畃畄畅畆畇畈畉畊畋界畍畎畏畐畑データベースウイルス感染警告危険システムエラー破壊削除暗号化ランサムウェア';
+
+        // Browser alert messages
+        const browserAlerts = [
+            { title: 'Security Warning', message: 'Your system has been compromised!\n\n病毒已检测到系统中' },
+            { title: 'Critical Error', message: 'Firewall has been disabled!\n\n防火墙已被禁用' },
+            { title: 'Windows Defender', message: 'Threat detected: Trojan.Generic\n\n检测到威胁：木马病毒' },
+            { title: 'System Alert', message: 'Unauthorized access detected!\n\n检测到未经授权的访问' },
+            { title: 'Fatal Error', message: 'System files are being encrypted!\n\n系统文件正在被加密' },
+            { title: 'Antivirus Alert', message: 'Multiple threats found!\n\n发现多个威胁' }
+        ];
+
+        // Alert() messages for old-school popups
+        const alertMessages = [
+            '⚠️ WARNING: Virus Detected!\n病毒警告！',
+            '🚨 CRITICAL ERROR: System Compromised!\n系统已被入侵！',
+            '❌ THREAT DETECTED: Trojan.Win32\n检测到木马病毒',
+            '⛔ ACCESS DENIED: Firewall Disabled\n防火墙已禁用',
+            '💀 FATAL: All files encrypted\n所有文件已加密',
+            '🔥 ALERT: Malware active\n恶意软件正在运行'
+        ];
+
+        // System notification messages
+        const systemNotifications = [
+            { title: 'Windows Security', message: 'Virus detected: 恶意软件.exe', icon: '🛡️' },
+            { title: 'System Error', message: '系统错误 0x8007045D', icon: '⚠️' },
+            { title: 'Windows Defender', message: 'Real-time protection disabled', icon: '🚫' },
+            { title: 'Critical Alert', message: '危险：勒索软件活动检测', icon: '🔴' },
+            { title: 'Firewall', message: 'Incoming attack blocked - 攻击已拦截', icon: '🔥' },
+            { title: 'BitDefender', message: '威胁隔离失败', icon: '❌' }
+        ];
+
+        // Create floating hearts
+        function createFloatingHearts() {
+            const bg = document.getElementById('heartsBg');
+            const hearts = ['❤️', '💖', '💕', '💗', '💝'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                bg.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 8000);
+            }, 400);
+        }
+
+        function createChineseRain() {
+            const char = document.createElement('div');
+            char.className = 'chinese-text';
+            char.textContent = chineseChars[Math.floor(Math.random() * chineseChars.length)];
+            char.style.left = Math.random() * 100 + '%';
+            char.style.top = '-50px';
+            document.body.appendChild(char);
+            
+            setTimeout(() => char.remove(), 3000);
+        }
+
+        // Create browser-style alert
+        function createBrowserAlert(alertData) {
+            const alert = document.createElement('div');
+            alert.className = 'browser-alert';
+            
+            // Random position
+            alert.style.top = (Math.random() * 40 + 10) + '%';
+            alert.style.left = (Math.random() * 40 + 10) + '%';
+            
+            alert.innerHTML = `
+                <div class="alert-header">
+                    <span class="alert-icon">🌐</span>
+                    <span class="alert-title">${alertData.title}</span>
+                </div>
+                <div class="alert-body">
+                    <div class="alert-message">${alertData.message}</div>
+                    <button class="alert-button" onclick="this.parentElement.parentElement.remove()">OK</button>
+                </div>
+            `;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentElement) alert.remove();
+            }, 3000);
+        }
+
+        // Create system notification
+        function createSystemNotification(notifData) {
+            const notif = document.createElement('div');
+            notif.className = 'system-notification';
+            
+            notif.style.top = (Math.random() * 60 + 10) + '%';
+            notif.style.right = '20px';
+            
+            notif.innerHTML = `
+                <div class="notification-header">
+                    <span class="notification-icon">${notifData.icon}</span>
+                    <span class="notification-title">${notifData.title}</span>
+                </div>
+                <div class="notification-message">${notifData.message}</div>
+            `;
+            
+            document.body.appendChild(notif);
+            
+            setTimeout(() => {
+                if (notif.parentElement) notif.remove();
+            }, 2500);
+        }
+
+        // Yes button click
+        document.getElementById('yesButton').onclick = function() {
+            // Create heart explosion
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.textContent = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = '50%';
+                    heart.style.top = '50%';
+                    heart.style.fontSize = (Math.random() * 25 + 25) + 'px';
+                    heart.style.pointerEvents = 'none';
+                    heart.style.zIndex = '9999';
+                    heart.style.transition = 'all 1s ease-out';
+                    document.body.appendChild(heart);
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = 150 + Math.random() * 200;
+                    
+                    setTimeout(() => {
+                        heart.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`;
+                        heart.style.opacity = '0';
+                    }, 10);
+                    
+                    setTimeout(() => heart.remove(), 1000);
+                }, i * 50);
+            }
+            
+            setTimeout(() => {
+                switchScreen('questionScreen', 'envelopeScreen');
+            }, 1500);
+        };
+
+        // No button click
+        document.getElementById('noButton').onclick = function() {
+            noClicks++;
+            
+            const btn = this;
+            const text = document.getElementById('questionText');
+            
+            // Update text
+            if (noClicks < questions.length) {
+                text.textContent = questions[noClicks];
+            }
+            
+            // Move button randomly
+            const x = (Math.random() - 0.5) * 300;
+            const y = (Math.random() - 0.5) * 200;
+            btn.style.transform = `translate(${x}px, ${y}px)`;
+            
+            // Shrink button
+            const scale = Math.max(0.3, 1 - (noClicks * 0.15));
+            btn.style.transform += ` scale(${scale})`;
+            
+            // Trigger virus after 5 clicks
+            if (noClicks >= 5) {
+                setTimeout(() => startVirus(), 400);
+            }
+        };
+
+        // Virus prank with Chinese characters and alerts
+        function startVirus() {
+            switchScreen('questionScreen', 'virusScreen');
+            
+            // Prevent clicking anywhere during virus
+            document.body.style.pointerEvents = 'none';
+            
+            const messages = [
+                "正在初始化恶意软件...",
+                "绕过安全协议...",
+                "下载恶意文件...",
+                "加密用户数据...",
+                "安装后门程序...",
+                "窃取凭据...",
+                "系统完全被攻破！"
+            ];
+            
+            let progress = 0;
+            
+            // Create old-style alert() popups
+            const alertMessages = [
+                "WARNING: Virus Detected!\n\n病毒检测！",
+                "CRITICAL ERROR\n\nYour files are being encrypted!",
+                "SYSTEM BREACH\n\n系统已被入侵",
+                "RANSOMWARE ALERT\n\nAll data will be deleted!",
+                "ACCESS DENIED\n\n访问被拒绝",
+                "FIREWALL DISABLED\n\n防火墙已禁用"
+            ];
+            
+            let alertIndex = 0;
+            const oldAlertInterval = setInterval(() => {
+                if (alertIndex < alertMessages.length) {
+                    alert(alertMessages[alertIndex]);
+                    alertIndex++;
+                } else {
+                    clearInterval(oldAlertInterval);
+                }
+            }, 1000);
+            
+            // Create falling Chinese characters
+            const chineseInterval = setInterval(() => {
+                createChineseRain();
+            }, 150);
+            
+            // Create browser alerts
+            let alertCount = 0;
+            const alertInterval = setInterval(() => {
+                if (alertCount < 8) {
+                    createBrowserAlert(browserAlerts[Math.floor(Math.random() * browserAlerts.length)]);
+                    alertCount++;
+                }
+            }, 600);
+            
+            // Create system notifications
+            let notifCount = 0;
+            const notifInterval = setInterval(() => {
+                if (notifCount < 6) {
+                    createSystemNotification(systemNotifications[Math.floor(Math.random() * systemNotifications.length)]);
+                    notifCount++;
+                }
+            }, 800);
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 8;
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    clearInterval(chineseInterval);
+                    clearInterval(alertInterval);
+                    clearInterval(notifInterval);
+                    clearInterval(oldAlertInterval);
+                    
+                    document.getElementById('virusMsg').textContent = messages[6];
+                    document.getElementById('virusMsg').style.fontSize = '2.2em';
+                    document.getElementById('virusMsg').style.color = '#ff0000';
+                    
+                    // Final wave of alerts
+                    for (let i = 0; i < 3; i++) {
+                        setTimeout(() => {
+                            createBrowserAlert(browserAlerts[Math.floor(Math.random() * browserAlerts.length)]);
+                        }, i * 300);
+                    }
+                    
+                    // Trigger blackout after final alerts
+                    setTimeout(() => {
+                        triggerBlackout();
+                    }, 2000);
+                } else {
+                    document.getElementById('virusProgress').style.width = progress + '%';
+                    const msgIndex = Math.floor((progress / 100) * 6);
+                    document.getElementById('virusMsg').textContent = messages[msgIndex];
+                }
+            }, 250);
+        }
+
+        // Trigger blackout effect
+        function triggerBlackout() {
+            // First fade virus screen to pure black
+            const virusScreen = document.getElementById('virusScreen');
+            virusScreen.style.transition = 'background 2s ease';
+            virusScreen.style.background = '#000';
+            
+            // After 2 seconds, show the blackout screen
+            setTimeout(() => {
+                // Show blackout screen - completely black, no text
+                document.getElementById('blackoutScreen').classList.add('active');
+                
+                // Hide virus screen
+                virusScreen.classList.remove('active');
+                
+                // Clear all popups
+                document.querySelectorAll('.browser-alert, .system-notification').forEach(el => el.remove());
+            }, 2000);
+            
+            // Stay on black screen - no transition
+            // Just pure blackout forever
+        }
+
+        // Envelope click - only works when envelope screen is active
+        document.getElementById('envelopeWrapper').onclick = function() {
+            // Only allow opening if we're on the envelope screen
+            if (document.getElementById('envelopeScreen').classList.contains('active')) {
+                document.getElementById('envelopeBox').classList.toggle('open');
+            }
+        };
+
+        // Letter emoji click
+        document.getElementById('letterEmoji').onclick = function(e) {
+            e.stopPropagation();
+            switchScreen('envelopeScreen', 'cardsScreen');
+        };
+
+        // Switch screens
+        function switchScreen(from, to) {
+            document.getElementById(from).classList.remove('active');
+            document.getElementById(to).classList.add('active');
+        }
+
+        // Show card in modal
+        function showCard(index) {
+            const modal = document.getElementById('cardModal');
+            const img = document.getElementById('modalImg');
+            const caption = document.getElementById('modalCaption');
+            
+            img.src = memories[index].img;
+            img.onerror = function() {
+                this.src = 'https://via.placeholder.com/800/e94560/ffffff?text=Memory+' + (index + 1);
+            };
+            caption.textContent = memories[index].text;
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('cardModal').classList.remove('active');
+        }
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('cardModal').onclick = function(e) {
+            if (e.target === this) closeModal();
+        };
+
+        // Start hearts animation
+        createFloatingHearts();
+    </script>
+</body>
+</html>
